@@ -26,17 +26,18 @@ const Box = ({ type }: BoxProps) => {
         setCards(result);
     }
 
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: "card",
         canDrop: (item: any) => { return item.status.id == type - 1 },
         drop: (item: any) => { onDropCard(item) },
         collect: (monitor) => ({
-            isOver: !!monitor.isOver()
+            isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop()
         })
     }))
 
     return (
-        <div className="border border-gray-400 border-solid rounded-lg relative" ref={drop}>
+        <div className={`border border-gray-400 border-solid rounded-lg relative ${isOver ? (canDrop ? "border-green-500" : "border-pink-500") : ""}`} ref={drop}>
             <div className="pl-1 pb-2 border-b solid border-gray-400 bg-gray">
                 {STATUS.find(e => e.id == type)?.label}
                 {type == 1 && !showAdd && <span className="inline-block cursor-pointer absolute top-2 right-1" onClick={() => setShowAdd(true)}><PlusIcon className="h-4 w-4 text-green-600" /></span>}
